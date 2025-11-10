@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/NearMe.git/static/css/main.7b709910.css",
+    "main.js": "/NearMe.git/static/js/main.70146211.js",
+    "static/js/453.8381102b.chunk.js": "/NearMe.git/static/js/453.8381102b.chunk.js",
+    "index.html": "/NearMe.git/index.html",
+    "main.7b709910.css.map": "/NearMe.git/static/css/main.7b709910.css.map",
+    "main.70146211.js.map": "/NearMe.git/static/js/main.70146211.js.map",
+    "453.8381102b.chunk.js.map": "/NearMe.git/static/js/453.8381102b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.7b709910.css",
+    "static/js/main.70146211.js"
+  ]
+}
