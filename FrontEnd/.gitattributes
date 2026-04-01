@@ -1,0 +1,13 @@
+# In your React project folder
+echo "* text=auto" > .gitattributes
+```
+
+Or manually create `.gitattributes` and add:
+```
+* text=auto
+*.js text eol=lf
+*.jsx text eol=lf
+*.json text eol=lf
+*.css text eol=lf
+*.html text eol=lf
+*.md text eol=lf

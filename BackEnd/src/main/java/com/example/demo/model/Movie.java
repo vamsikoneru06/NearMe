@@ -1,0 +1,52 @@
+package com.example.demo.model;
+
+import jakarta.persistence.*;
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+public class Movie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String title;
+    private String genre;
+    private double rating;
+    @Lob
+    @Column(columnDefinition="TEXT")
+    private String poster;
+    private String posterFilename;
+    private String location;
+
+    @ElementCollection
+    @CollectionTable(name = "movie_seating")
+    private List<Seat> seatingLayout = new ArrayList<>();
+
+    public Movie() {}
+
+    public Movie(String title, String genre, double rating, String poster, String posterFilename, String location) {
+        this.title = title;
+        this.genre = genre;
+        this.rating = rating;
+        this.poster = poster;
+        this.posterFilename = posterFilename;
+        this.location = location;
+    }
+
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
+    public String getTitle() { return title; }
+    public void setTitle(String title) { this.title = title; }
+    public String getGenre() { return genre; }
+    public void setGenre(String genre) { this.genre = genre; }
+    public double getRating() { return rating; }
+    public void setRating(double rating) { this.rating = rating; }
+    public String getPoster() { return poster; }
+    public void setPoster(String poster) { this.poster = poster; }
+    public String getPosterFilename() { return posterFilename; }
+    public void setPosterFilename(String posterFilename) { this.posterFilename = posterFilename; }
+    public String getLocation() { return location; }
+    public void setLocation(String location) { this.location = location; }
+    public List<Seat> getSeatingLayout() { return seatingLayout; }
+    public void setSeatingLayout(List<Seat> seatingLayout) { this.seatingLayout = seatingLayout; }
+}
