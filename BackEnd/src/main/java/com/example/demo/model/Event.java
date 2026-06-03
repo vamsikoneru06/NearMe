@@ -1,8 +1,8 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -12,12 +12,9 @@ public class Event {
     private Long id;
     private String name;
     private String venue;
-    private Date date;
+    private LocalDateTime date;
     private double price;
-    @Lob
-    @Column(columnDefinition="TEXT")
     private String image;
-    private String imageFilename;
 
     @ElementCollection
     @CollectionTable(name = "event_slots")
@@ -29,14 +26,12 @@ public class Event {
     public void setName(String name) { this.name = name; }
     public String getVenue() { return venue; }
     public void setVenue(String venue) { this.venue = venue; }
-    public Date getDate() { return date; }
-    public void setDate(Date date) { this.date = date; }
+    public LocalDateTime getDate() { return date; }
+    public void setDate(LocalDateTime date) { this.date = date; }
     public double getPrice() { return price; }
     public void setPrice(double price) { this.price = price; }
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
-    public String getImageFilename() { return imageFilename; }
-    public void setImageFilename(String imageFilename) { this.imageFilename = imageFilename; }
     public List<TimeSlot> getAvailableSlots() { return availableSlots; }
     public void setAvailableSlots(List<TimeSlot> availableSlots) { this.availableSlots = availableSlots; }
 }

@@ -13,10 +13,7 @@ public class Restaurant {
     private String type;
     private String location;
     private double rating;
-    @Lob
-    @Column(columnDefinition="TEXT")
     private String image;
-    private String imageFilename;
 
     @ElementCollection
     @CollectionTable(name = "restaurant_menu")
@@ -34,8 +31,6 @@ public class Restaurant {
     public void setRating(double rating) { this.rating = rating; }
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
-    public String getImageFilename() { return imageFilename; }
-    public void setImageFilename(String imageFilename) { this.imageFilename = imageFilename; }
     public List<MenuItem> getMenu() { return menu; }
     public void setMenu(List<MenuItem> menu) { this.menu = menu; }
 }

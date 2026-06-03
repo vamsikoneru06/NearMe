@@ -11,11 +11,7 @@ public class Shop {
     private String category;
     private String location;
     private double rating;
-    @Lob
-    @Column(columnDefinition="TEXT")
     private String image;
-
-    private String imageFilename; // ADDED THIS FIELD
 
     // Getters and Setters
     public Long getId() { return id; }
@@ -30,6 +26,4 @@ public class Shop {
     public void setRating(double rating) { this.rating = rating; }
     public String getImage() { return image; }
     public void setImage(String image) { this.image = image; }
-    public String getImageFilename() { return imageFilename; } // ADDED THIS
-    public void setImageFilename(String imageFilename) { this.imageFilename = imageFilename; } // ADDED THIS
 }

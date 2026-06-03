@@ -1,0 +1,31 @@
+# Maven build output
+BackEnd/target/
+
+# Gradle (legacy, now removed)
+BackEnd/.gradle/
+BackEnd/build/
+
+# Node modules
+FrontEnd/student-frontend/node_modules/
+
+# Environment variables (do not commit secrets)
+FrontEnd/student-frontend/.env
+FrontEnd/student-frontend/.env.local
+FrontEnd/student-frontend/.env.production
+
+# React build output
+FrontEnd/student-frontend/build/
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+*.ipr
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
