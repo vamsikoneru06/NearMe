@@ -1,30 +1,207 @@
-# NearMe
+<div align="center">
 
-A full-stack web application that helps users discover local points of interest — restaurants, movies, shops, tourist spots, events, and activities — across major Indian cities.
+<img src="https://img.shields.io/badge/NearMe-Explore%20What's%20Near%20You-c84b31?style=for-the-badge&logo=mapbox&logoColor=white" alt="NearMe" height="40"/>
+
+<br/><br/>
+
+**A full-stack city explorer that pulls real-time places, photos & maps from Google**
+
+<br/>
+
+![Java](https://img.shields.io/badge/Java%2017-ED8B00?style=flat-square&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot%203.2-6DB33F?style=flat-square&logo=springboot&logoColor=white)
+![React](https://img.shields.io/badge/React%2018-61DAFB?style=flat-square&logo=react&logoColor=black)
+![Google Places](https://img.shields.io/badge/Google%20Places%20API-4285F4?style=flat-square&logo=googlemaps&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT%20Auth-000000?style=flat-square&logo=jsonwebtokens&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL%208-4479A1?style=flat-square&logo=mysql&logoColor=white)
+
+</div>
+
+---
+
+## What is NearMe?
+
+NearMe is a full-stack **city explorer web app** built as a Semester 3 Object-Oriented Programming project. Search any Indian city and instantly discover real restaurants, cinemas, shops, landmarks, events, and activities — powered by the **Google Places API** with live photos and interactive maps.
+
+---
+
+## Screenshots
+
+<div align="center">
+
+| Home — Light Mode | Restaurants |
+|:-:|:-:|
+| ![Home](img.png) | ![Restaurants](img_1.png) |
+
+| Locations — Liquid Glass Cards | Detail Modal with Live Map |
+|:-:|:-:|
+| ![Locations](img_2.png) | ![Detail](img_3.png) |
+
+</div>
+
+---
+
+## Features
+
+- **Real-time Google Places data** — every search hits the Google Places API for live results
+- **Live place photos** — actual Google place photos, not stock images
+- **Interactive maps** — Google Maps embed inside every detail modal (all 6 categories)
+- **6 categories** — Movies, Restaurants, Shops, Locations, Events, Activities
+- **8 Indian cities** — Hyderabad, Mumbai, Chennai, Bangalore, Delhi, Vijayawada, Guntur, Rajahmundry
+- **JWT authentication** — register / login with BCrypt-hashed passwords
+- **Dark & Light themes** — full CSS variable theming with smooth transitions
+- **Bubble hero animation** — interactive canvas with physics-based bubbles
+- **3D tilt cards** — smooth perspective tilt on hover
+- **Liquid glass UI** — backdrop-filter frosted glass cards with shimmer highlights
+- **OpenStreetMap fallback** — free map tiles when no Google key is set
+- **Graceful image fallback** — Google Photos → local static → Picsum seed
+- **Race-condition safe** — AbortController cancels stale fetch requests
 
 ---
 
 ## Tech Stack
 
-| Layer     | Technology                                      |
-|-----------|-------------------------------------------------|
-| Backend   | Java 17, Spring Boot 3.2, Spring Data JPA, Spring Security |
-| Database  | MySQL 8 (H2 for local dev/tests)               |
-| Auth      | JWT (JJWT), BCrypt password hashing            |
-| Frontend  | React 18, vanilla CSS                          |
-| Build     | Maven (backend), npm / Create React App (frontend) |
-| Container | Docker + Docker Compose                        |
-| Docs      | Springdoc OpenAPI (Swagger UI)                 |
+| Layer | Technology |
+|---|---|
+| **Backend** | Java 17, Spring Boot 3.2, Spring Data JPA, Spring Security |
+| **Auth** | JWT (JJWT 0.12), BCrypt password hashing |
+| **Database** | MySQL 8 (H2 in-memory for dev — zero config) |
+| **Frontend** | React 18, vanilla CSS (no component library) |
+| **Maps & Places** | Google Maps Embed API + Google Places Text Search API |
+| **Maps (free fallback)** | OpenStreetMap + Nominatim geocoding |
+| **Build** | Maven (backend), npm / Create React App (frontend) |
+| **API Docs** | Springdoc OpenAPI — Swagger UI at `/swagger-ui.html` |
 
 ---
 
-## Prerequisites
+## Architecture
 
-- Java 17+
-- Maven 3.9+
-- Node.js 18+ and npm
-- MySQL 8 (or use the Docker Compose setup)
-- Docker & Docker Compose (optional, for containerised run)
+```
+┌─────────────────────────────────────────────────────┐
+│                  React 18 Frontend                   │
+│  MAP_KEY set → /api/places (Google Places proxy)    │
+│  No key     → /api/movies, /api/restaurants, ...    │
+└──────────────────┬──────────────────────────────────┘
+                   │ HTTP/REST + JWT Bearer
+┌──────────────────▼──────────────────────────────────┐
+│              Spring Boot 3.2 Backend                 │
+│  ┌─────────────────┐   ┌──────────────────────────┐ │
+│  │ GooglePlaces     │   │ Category Controllers     │ │
+│  │ Controller       │   │ (Movies/Restaurants/...) │ │
+│  └────────┬────────┘   └──────────────────────────┘ │
+│           │ HTTPS                                    │
+│  ┌────────▼────────┐   ┌──────────────────────────┐ │
+│  │ GooglePlaces     │   │   H2 / MySQL             │ │
+│  │ Service          │   │   (seed data for 8 cities)│ │
+│  └─────────────────┘   └──────────────────────────┘ │
+└─────────────────────────────────────────────────────┘
+```
+
+---
+
+## Quick Start
+
+### Prerequisites
+- Java 17+, Maven 3.9+
+- Node.js 18+, npm
+- A Google Maps API key *(optional — app works without it using seed data)*
+
+### 1. Clone
+
+```bash
+git clone https://github.com/vamsikoneru06/NearMe.git
+cd NearMe
+```
+
+### 2. Backend
+
+```bash
+cd backend
+# Create local secrets file (gitignored — never committed)
+echo "GOOGLE_PLACES_KEY=your_key_here" > src/main/resources/application-local.properties
+
+mvn spring-boot:run
+# API running at http://localhost:8080
+# Swagger UI at http://localhost:8080/swagger-ui.html
+```
+
+### 3. Frontend
+
+```bash
+cd FrontEnd
+# Create local env file (gitignored — never committed)
+echo "REACT_APP_BACKEND_URL=http://localhost:8080" > .env
+echo "REACT_APP_MAP_API_KEY=your_key_here" >> .env
+
+npm install
+npm start
+# App running at http://localhost:3000
+```
+
+> **No Google API key?** The app falls back to hardcoded seed data for all 8 cities with OpenStreetMap for maps — works completely offline.
+
+---
+
+## Environment Variables
+
+| Variable | Where | Description |
+|---|---|---|
+| `GOOGLE_PLACES_KEY` | `application-local.properties` | Google Places API key for real-time data |
+| `REACT_APP_MAP_API_KEY` | `FrontEnd/.env` | Same key — enables Google Maps embed |
+| `REACT_APP_BACKEND_URL` | `FrontEnd/.env` | Backend base URL (default: `http://localhost:8080`) |
+| `DB_URL` | env / `application-local.properties` | MySQL JDBC URL (H2 used if not set) |
+| `JWT_SECRET` | env / `application-local.properties` | JWT signing secret (min 32 chars) |
+
+> Copy `.env.example` to see the full list of available variables.
+
+---
+
+## API Reference
+
+### Auth — `/api/auth`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/auth/register` | No | Register — returns JWT |
+| POST | `/api/auth/login` | No | Login — returns JWT |
+
+### Places (Google-powered) — `/api/places`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/places?city=Hyderabad&type=restaurant` | No | Real-time Google Places search |
+
+### Category Data — `/api/*`
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| GET | `/api/movies?location=Hyderabad` | No | Movies by city |
+| GET | `/api/restaurants?location=Hyderabad` | No | Restaurants by city |
+| GET | `/api/shops?location=Hyderabad` | No | Shops by city |
+| GET | `/api/activities?location=Hyderabad` | No | Activities by city |
+| GET | `/api/events?location=Hyderabad` | No | Events by city |
+| GET | `/api/locations` | No | Curated geo-locations with lat/lng |
+
+### Reviews & Favourites
+| Method | Endpoint | Auth | Description |
+|---|---|---|---|
+| POST | `/api/locations/{id}/reviews` | Yes | Add review |
+| GET | `/api/locations/{id}/reviews` | No | Get reviews |
+| POST | `/api/favorites/{locationId}` | Yes | Save location |
+| GET | `/api/favorites` | Yes | My saved locations |
+
+All endpoints return structured JSON errors:
+```json
+{ "status": 404, "error": "Not Found", "message": "...", "timestamp": "..." }
+```
+
+---
+
+## Security Notes
+
+- Passwords hashed with BCrypt (strength 10)
+- JWT tokens signed with HMAC-SHA256
+- All secrets stored in gitignored local files only
+- Input sanitised before Google Places API calls (length limit + character stripping)
+- CORS locked to configured origin — not wildcard
+- H2 console restricted (`web-allow-others=false`)
 
 ---
 
@@ -32,178 +209,28 @@ A full-stack web application that helps users discover local points of interest 
 
 ```
 NearMe/
-├── backend/          # Spring Boot application
-│   ├── src/main/java/com/nearme/
-│   │   ├── controller/
-│   │   ├── service/impl/
-│   │   ├── repository/
-│   │   ├── model/
-│   │   ├── dto/
-│   │   ├── exception/
-│   │   ├── security/
-│   │   ├── config/
-│   │   └── util/
-│   └── src/main/resources/
-│       ├── application.properties
-│       └── data.sql
-├── frontend/         # React application
+├── BackEnd/                          # Spring Boot (Maven)
+│   └── src/main/java/com/nearme/
+│       ├── controller/               # REST controllers
+│       ├── service/impl/             # Business logic
+│       ├── repository/               # Spring Data JPA
+│       ├── model/                    # JPA entities
+│       ├── dto/                      # Request/response DTOs
+│       ├── security/                 # JWT filter + config
+│       ├── config/                   # CORS, seed data, OpenAPI
+│       └── exception/                # Global error handler
+├── FrontEnd/                         # React 18 (CRA)
 │   └── src/
-├── docker-compose.yml
-└── .env.example
+│       ├── App.js                    # Entire frontend (components + hooks)
+│       └── App.css                   # All styles (design tokens + components)
+├── .env.example                      # Environment variable reference
+└── README.md
 ```
 
 ---
 
-## Quick Start (Docker)
+<div align="center">
 
-```bash
-# 1. Copy and fill in environment variables
-cp .env.example .env
+Built with Java, Spring Boot, React & Google Maps API
 
-# 2. Start everything
-docker-compose up --build
-
-# Backend:  http://localhost:8080
-# Frontend: http://localhost:3000
-# Swagger:  http://localhost:8080/swagger-ui.html
-```
-
----
-
-## Manual Setup
-
-### Backend
-
-```bash
-cd backend
-
-# Option A — use H2 (zero config, data resets on restart)
-mvn spring-boot:run
-
-# Option B — use MySQL (requires a running MySQL instance)
-export DB_URL=jdbc:mysql://localhost:3306/nearme
-export DB_USER=root
-export DB_PASS=yourpassword
-export JWT_SECRET=change-this-in-production
-mvn spring-boot:run
-```
-
-The API will be available at `http://localhost:8080`.  
-Swagger UI: `http://localhost:8080/swagger-ui.html`
-
-### Frontend
-
-```bash
-cd frontend
-cp .env.example .env          # set REACT_APP_BACKEND_URL if needed
-npm install
-npm start                     # http://localhost:3000
-```
-
----
-
-## Environment Variables
-
-| Variable       | Description                              | Default (dev)                          |
-|----------------|------------------------------------------|----------------------------------------|
-| `DB_URL`       | JDBC connection string                   | `jdbc:mysql://localhost:3306/nearme`   |
-| `DB_USER`      | Database username                        | `root`                                 |
-| `DB_PASS`      | Database password                        | *(none)*                               |
-| `JWT_SECRET`   | Secret key for signing JWT tokens        | `change-this-in-production`            |
-| `JWT_EXPIRY`   | Token lifetime in milliseconds           | `86400000` (24 h)                      |
-| `CORS_ORIGINS` | Comma-separated list of allowed origins  | `http://localhost:3000`                |
-
-See [`.env.example`](.env.example) for the full list.
-
----
-
-## API Endpoints
-
-All endpoints return JSON. Protected endpoints require `Authorization: Bearer <token>`.
-
-### Authentication — `/api/auth`
-
-| Method | Path               | Body                          | Auth | Description              |
-|--------|--------------------|-------------------------------|------|--------------------------|
-| POST   | `/api/auth/register` | `{name, email, password}`   | No   | Register, returns JWT    |
-| POST   | `/api/auth/login`    | `{email, password}`         | No   | Login, returns JWT       |
-
-### Locations — `/api/locations`
-
-| Method | Path                                      | Auth  | Description                          |
-|--------|-------------------------------------------|-------|--------------------------------------|
-| GET    | `/api/locations?page=0&size=10&category=` | No    | Paginated list, optional category filter |
-| GET    | `/api/locations/nearby?lat=&lng=&radius=` | No    | Locations within radius (km)         |
-| GET    | `/api/locations/search?q=`                | No    | Full-text search                     |
-| GET    | `/api/locations/{id}`                     | No    | Single location with reviews         |
-| POST   | `/api/locations`                          | ADMIN | Create location                      |
-| PUT    | `/api/locations/{id}`                     | ADMIN | Update location                      |
-| DELETE | `/api/locations/{id}`                     | ADMIN | Delete location                      |
-
-### Reviews — `/api`
-
-| Method | Path                                     | Auth | Description              |
-|--------|------------------------------------------|------|--------------------------|
-| POST   | `/api/locations/{locationId}/reviews`    | Yes  | Add review (rating 1–5)  |
-| GET    | `/api/locations/{locationId}/reviews`    | No   | Paginated reviews        |
-| DELETE | `/api/reviews/{id}`                      | Yes  | Delete own review        |
-
-### Favorites — `/api/favorites`
-
-| Method | Path                        | Auth | Description              |
-|--------|-----------------------------|------|--------------------------|
-| POST   | `/api/favorites/{locationId}` | Yes | Save location            |
-| DELETE | `/api/favorites/{locationId}` | Yes | Unsave location          |
-| GET    | `/api/favorites`              | Yes | List saved locations     |
-
-### Standard Response Format
-
-**Success (paginated):**
-```json
-{
-  "content": [...],
-  "page": 0,
-  "size": 10,
-  "totalElements": 100,
-  "totalPages": 10
-}
-```
-
-**Error:**
-```json
-{
-  "status": 404,
-  "error": "Not Found",
-  "message": "Location with id 42 not found",
-  "timestamp": "2026-06-04T12:00:00Z"
-}
-```
-
----
-
-## Running Tests
-
-```bash
-cd backend
-mvn test
-```
-
-Tests cover `LocationService`, `AuthService`, and `LocationController` (MockMvc).
-
----
-
-## Screenshots
-
-> _Add screenshots here after first deployment._
-
-| Home Page | Location Detail | Favorites |
-|-----------|----------------|-----------|
-| _TODO_    | _TODO_         | _TODO_    |
-
----
-
-## Contributing
-
-1. Fork the repo and create a feature branch.
-2. Run `mvn test` before opening a PR.
-3. Follow Java naming conventions: `camelCase` methods, `PascalCase` classes, `UPPER_SNAKE_CASE` constants.
+</div>
