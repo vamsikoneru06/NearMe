@@ -1,31 +1,48 @@
-# Maven build output
-BackEnd/target/
+# ─── Maven ────────────────────────────────────────────────────────────────────
+backend/target/
+*.class
 
-# Gradle (legacy, now removed)
-BackEnd/.gradle/
-BackEnd/build/
+# ─── Gradle (legacy) ──────────────────────────────────────────────────────────
+backend/.gradle/
+backend/build/
 
-# Node modules
-FrontEnd/student-frontend/node_modules/
+# ─── Node / React ─────────────────────────────────────────────────────────────
+frontend/node_modules/
+frontend/build/
+frontend/.pnp
+frontend/.pnp.js
+frontend/coverage/
 
-# Environment variables (do not commit secrets)
-FrontEnd/student-frontend/.env
-FrontEnd/student-frontend/.env.local
-FrontEnd/student-frontend/.env.production
+# ─── Environment variables (never commit secrets) ─────────────────────────────
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+frontend/.env
+frontend/.env.local
+frontend/.env.development.local
+frontend/.env.test.local
+frontend/.env.production.local
 
-# React build output
-FrontEnd/student-frontend/build/
+# Spring Boot local override (machine-specific, never commit)
+backend/src/main/resources/application-local.properties
 
-# IntelliJ IDEA
+# ─── IntelliJ IDEA ────────────────────────────────────────────────────────────
 .idea/
 *.iml
 *.iws
 *.ipr
 
-# OS files
+# ─── VS Code ──────────────────────────────────────────────────────────────────
+.vscode/
+
+# ─── OS ───────────────────────────────────────────────────────────────────────
 .DS_Store
 Thumbs.db
 
-# Logs
+# ─── Logs ─────────────────────────────────────────────────────────────────────
 *.log
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
