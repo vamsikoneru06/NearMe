@@ -741,69 +741,66 @@ const IcoLinkedin = () => (
 );
 
 function DeveloperCard() {
-  const ref = useReveal(0);
+  const [visible,   setVisible]   = useState(false);
+  const [dismissed, setDismissed] = useState(false);
+
+  // Slide up 2 s after mount
+  useEffect(() => {
+    const t = setTimeout(() => setVisible(true), 2000);
+    return () => clearTimeout(t);
+  }, []);
+
+  if (dismissed) return null;
 
   return (
-    <section className="dev-section">
-      <div className="dev-grid-bg" />
-      <p className="dev-eyebrow">Built by</p>
-      <h2 className="dev-heading">Meet the Developer</h2>
+    <div className={`dev-popup${visible ? " dev-popup--up" : ""}`}>
+      {/* Dismiss */}
+      <button
+        className="dev-dismiss"
+        onClick={() => { setVisible(false); setTimeout(() => setDismissed(true), 500); }}
+        aria-label="Close"
+      >✕</button>
 
-      <div ref={ref} className="dev-card reveal">
-        {/* Online status */}
-        <div className="dev-status-wrap">
-          <div className="dev-status-dot" />
-          <div className="dev-status-ping" />
-        </div>
-
-        {/* Avatar */}
-        <div className="dev-avatar-wrap">
-          <div className="dev-avatar-ring">
-            <img
-              src="https://github.com/vamsikoneru06.png"
-              alt="Vamsi Koneru"
-              className="dev-avatar-img"
-              onError={e => { e.target.src = "https://picsum.photos/seed/vamsi-developer/200/200"; }}
-            />
-          </div>
-          <div className="dev-avatar-glow" />
-        </div>
-
-        {/* Info */}
-        <div className="dev-info">
-          <h3 className="dev-name">Vamsi Koneru</h3>
-          <p className="dev-role">Full Stack Developer</p>
-          <p className="dev-sub">Java · Spring Boot · React</p>
-        </div>
-
-        {/* Buttons */}
-        <div className="dev-actions">
-          <a
-            href="https://github.com/vamsikoneru06"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="dev-btn dev-btn-github"
-            title="GitHub"
-          >
-            <IcoGithub />
-            <span>GitHub</span>
-          </a>
-          <a
-            href="https://www.linkedin.com/in/vamsi-koneru-0a0661330/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="dev-btn dev-btn-linkedin"
-            title="LinkedIn"
-          >
-            <IcoLinkedin />
-            <span>LinkedIn</span>
-          </a>
-        </div>
-
-        {/* Hover border glow */}
-        <div className="dev-border-glow" />
+      {/* Status dot */}
+      <div className="dev-status-wrap">
+        <div className="dev-status-dot" />
+        <div className="dev-status-ping" />
       </div>
-    </section>
+
+      {/* Avatar */}
+      <div className="dev-avatar-wrap">
+        <div className="dev-avatar-ring">
+          <img
+            src="https://github.com/vamsikoneru06.png"
+            alt="Vamsi Koneru"
+            className="dev-avatar-img"
+            onError={e => { e.target.src = "https://picsum.photos/seed/vamsi-dev/200/200"; }}
+          />
+        </div>
+        <div className="dev-avatar-glow" />
+      </div>
+
+      {/* Info */}
+      <div className="dev-info">
+        <h3 className="dev-name">Vamsi Koneru</h3>
+        <p className="dev-role">Full Stack Developer</p>
+        <p className="dev-sub">Java · Spring Boot · React</p>
+      </div>
+
+      {/* Links */}
+      <div className="dev-actions">
+        <a href="https://github.com/vamsikoneru06" target="_blank" rel="noopener noreferrer"
+          className="dev-btn dev-btn-github">
+          <IcoGithub /><span>GitHub</span>
+        </a>
+        <a href="https://www.linkedin.com/in/vamsi-koneru-0a0661330/" target="_blank" rel="noopener noreferrer"
+          className="dev-btn dev-btn-linkedin">
+          <IcoLinkedin /><span>LinkedIn</span>
+        </a>
+      </div>
+
+      <div className="dev-border-glow" />
+    </div>
   );
 }
 
@@ -935,12 +932,13 @@ function App() {
         </div>
       </main>
 
-      <DeveloperCard />
       <Footer />
 
       {selectedItem && (
         <DetailModal item={selectedItem} cat={cat} onClose={() => setSelectedItem(null)} />
       )}
+
+      <DeveloperCard />
     </div>
   );
 }
