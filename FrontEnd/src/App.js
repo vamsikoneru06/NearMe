@@ -495,8 +495,8 @@ function LocationCard({ item, index, onOpen }) {
   const distKm    = item.distanceKm != null
     ? item.distanceKm.toFixed(1)
     : item.distance || null;
-  const categoryLabel = item.category
-    ? item.category.replace(/_/g, " ")
+  const categoryLabel = (item.category || item.type)
+    ? (item.category || item.type).replace(/_/g, " ")
     : null;
 
   return (
@@ -751,6 +751,7 @@ function App() {
 
   const endpointRef = useRef("api/movies");
   const labelRef    = useRef("Movies");
+  const abortRef    = useRef(null);
 
   useEffect(() => {
     document.documentElement.className = `${theme}-theme`;
@@ -764,7 +765,9 @@ function App() {
     setIsLoading(true);
     setError(null);
 
+    if (abortRef.current) abortRef.current.abort();
     const controller = new AbortController();
+    abortRef.current = controller;
     const signal = controller.signal;
 
     try {
@@ -791,8 +794,6 @@ function App() {
     } finally {
       setIsLoading(false);
     }
-
-    return () => controller.abort();
   }, [userLocation]);
 
   useEffect(() => {
