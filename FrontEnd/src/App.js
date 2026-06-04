@@ -741,65 +741,64 @@ const IcoLinkedin = () => (
 );
 
 function DeveloperCard() {
-  const [visible,   setVisible]   = useState(false);
-  const [dismissed, setDismissed] = useState(false);
-
-  // Slide up 2 s after mount
-  useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 2000);
-    return () => clearTimeout(t);
-  }, []);
-
-  if (dismissed) return null;
-
   return (
-    <div className={`dev-popup${visible ? " dev-popup--up" : ""}`}>
-      {/* Dismiss */}
-      <button
-        className="dev-dismiss"
-        onClick={() => { setVisible(false); setTimeout(() => setDismissed(true), 500); }}
-        aria-label="Close"
-      >✕</button>
+    <div className="dev-wrapper">
 
-      {/* Status dot */}
-      <div className="dev-status-wrap">
-        <div className="dev-status-dot" />
-        <div className="dev-status-ping" />
-      </div>
-
-      {/* Avatar */}
-      <div className="dev-avatar-wrap">
-        <div className="dev-avatar-ring">
-          <img
-            src="https://github.com/vamsikoneru06.png"
-            alt="Vamsi Koneru"
-            className="dev-avatar-img"
-            onError={e => { e.target.src = "https://picsum.photos/seed/vamsi-dev/200/200"; }}
-          />
+      {/* ── Card — revealed on skid hover (CSS only) ── */}
+      <div className="dev-popup">
+        <div className="dev-status-wrap">
+          <div className="dev-status-dot" />
+          <div className="dev-status-ping" />
         </div>
-        <div className="dev-avatar-glow" />
+
+        <div className="dev-avatar-wrap">
+          <div className="dev-avatar-ring">
+            <img
+              src="https://github.com/vamsikoneru06.png"
+              alt="Vamsi Koneru"
+              className="dev-avatar-img"
+              onError={e => { e.target.src = "https://picsum.photos/seed/vamsi-dev/200/200"; }}
+            />
+          </div>
+          <div className="dev-avatar-glow" />
+        </div>
+
+        <div className="dev-info">
+          <h3 className="dev-name">Vamsi Koneru</h3>
+          <p className="dev-sub">Java · Spring Boot · React</p>
+        </div>
+
+        <div className="dev-actions">
+          <a href="https://github.com/vamsikoneru06" target="_blank" rel="noopener noreferrer"
+            className="dev-btn dev-btn-github">
+            <IcoGithub /><span>GitHub</span>
+          </a>
+          <a href="https://www.linkedin.com/in/vamsi-koneru-0a0661330/" target="_blank" rel="noopener noreferrer"
+            className="dev-btn dev-btn-linkedin">
+            <IcoLinkedin /><span>LinkedIn</span>
+          </a>
+        </div>
+
+        <div className="dev-border-glow" />
       </div>
 
-      {/* Info */}
-      <div className="dev-info">
-        <h3 className="dev-name">Vamsi Koneru</h3>
-        <p className="dev-role">Full Stack Developer</p>
-        <p className="dev-sub">Java · Spring Boot · React</p>
+      {/* ── Skid — always visible tab ── */}
+      <div className="dev-skid">
+        <img
+          src="https://github.com/vamsikoneru06.png"
+          alt="Vamsi"
+          className="dev-skid-avatar"
+          onError={e => { e.target.src = "https://picsum.photos/seed/vamsi-dev/200/200"; }}
+        />
+        <div className="dev-skid-text">
+          <span className="dev-skid-label">Built by</span>
+          <span className="dev-skid-name">Vamsi Koneru</span>
+        </div>
+        <svg className="dev-skid-arrow" width="14" height="14" viewBox="0 0 24 24" fill="none">
+          <path d="M18 15l-6-6-6 6" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+        </svg>
       </div>
 
-      {/* Links */}
-      <div className="dev-actions">
-        <a href="https://github.com/vamsikoneru06" target="_blank" rel="noopener noreferrer"
-          className="dev-btn dev-btn-github">
-          <IcoGithub /><span>GitHub</span>
-        </a>
-        <a href="https://www.linkedin.com/in/vamsi-koneru-0a0661330/" target="_blank" rel="noopener noreferrer"
-          className="dev-btn dev-btn-linkedin">
-          <IcoLinkedin /><span>LinkedIn</span>
-        </a>
-      </div>
-
-      <div className="dev-border-glow" />
     </div>
   );
 }
